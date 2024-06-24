@@ -5,6 +5,11 @@ from django.urls import reverse_lazy
 from .forms import CategoryForm, CountryForm, ProductForm, OrderForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required, permission_required
+from django.utils.decorators import method_decorator
+
 
 
 class ProductList(ListView):
@@ -57,7 +62,8 @@ def delete_from_basket(request, pk):
     return HttpResponseRedirect(reverse('product', args=[str(pk)]))
 
 
-class ProductCreate(CreateView):
+class ProductCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = ('appsite.add_product')
     form_class = ProductForm
     model = Product
     template_name = 'product_edit.html'
@@ -65,9 +71,6 @@ class ProductCreate(CreateView):
 
     def form_valid(self, form):
         product = form.save(commit=False)
-        # account = Account.objects.filter(username = self.request.user).values('id')
-        # account_id = account.values_list('id')[0][0]
-        # product.user_id = account_id
         product.save()
         imgs = self.request.FILES.getlist('image')
         if imgs:
@@ -79,13 +82,15 @@ class ProductCreate(CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdate(UpdateView):
+class ProductUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = ('appsite.change_product')
     form_class = ProductForm
     model = Product
     template_name = 'producty_edit.html'
 
 
-class ProductDelete(DeleteView):
+class ProductDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = ('appsite.delete_product')
     model = Product
     template_name = 'product_delete.html'
     success_url = reverse_lazy('products')
@@ -146,20 +151,23 @@ class CategoryDetail(DetailView):
     context_object_name = 'category'
 
 
-class CategoryCreate(CreateView):
+class CategoryCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = ('appsite.add_category')
     form_class = CategoryForm
     model = Category
     template_name = 'category_edit.html'
     success_url = ''
 
 
-class CategoryUpdate(UpdateView):
+class CategoryUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = ('appsite.change_category')
     form_class = CategoryForm
     model = Category
     template_name = 'category_edit.html'
 
 
-class CategoryDelete(DeleteView):
+class CategoryDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = ('appsite.delete_category')
     model = Category
     template_name = 'category_delete.html'
     success_url = reverse_lazy('categorys')
@@ -179,21 +187,24 @@ class CountryDetail(DetailView):
     context_object_name = 'country'
 
 
-class CountryCreate(CreateView):
+class CountryCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = ('appsite.add_country')
     form_class = CountryForm
     model = Country
     template_name = 'country_edit.html'
     success_url = ''
 
 
-class CountryUpdate(UpdateView):
+class CountryUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = ('appsite.change_country')
     form_class = CountryForm
     model = Country
     template_name = 'country_edit.html'
 
 
 
-class CountryDelete(DeleteView):
+class CountryDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = ('appsite.delete_country')
     model = Country
     template_name = 'country_delete.html'
     success_url = reverse_lazy('countrys')
