@@ -1,0 +1,27 @@
+{% extends 'flatpages/default.html' %}
+{% block title %}
+корзина
+{% endblock title %}
+
+{% block content %}
+   <h1>корзина</h1>
+   <hr>
+   {% if orderproduct %}
+           <table class="table-bordered" width="100%">
+           <tr align="left">
+               <th>Заказ</th>
+               <th>Товар</th>
+               <th>Количество</th>
+           </tr>
+            <tr align="left">
+               <td width="10%">{{ orderproduct.order_id }}</td>
+               <td width="10%">{{ orderproduct.product}}</td>
+               <td width="10%">{{ orderproduct.quantity }}</td>
+            </tr>
+           </table>
+   {% else %}
+       <h2>Товаров нет!</h2>
+   {% endif %}
+
+<a href="/orders/">к заказам</a>
+{% endblock content %}

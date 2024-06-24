@@ -1,0 +1,25 @@
+
+{% extends 'flatpages/default.html' %}
+{% block title %}
+страна
+{% endblock title %}
+
+{% block content %}
+   <h1>страна №{{ country.id }}</h1>
+   <hr>
+
+   {% if country %}
+<table class="table-bordered" width="100%">
+    <tr align="left"><td>Страна</td><td>{{ country.country_name }}</td></tr>
+    <tr align="left"><td>Изменить</td><td><a href="/countrys/{{ country.id }}/edit/">Изменить</a></td></tr>
+    <tr align="left"><td>Удалить</td><td><a href="/countrys/{{ country.id }}/delete/">Удалить</a></td></tr>
+</table>
+
+<a href="/countrys/">назад к странам</a>
+
+   {% else %}
+       <h2>Такой страны нет!</h2>
+   {% endif %}
+
+
+{% endblock content %}

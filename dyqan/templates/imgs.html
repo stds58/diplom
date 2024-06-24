@@ -1,0 +1,29 @@
+
+{% extends 'flatpages/default.html' %}
+{% block title %}
+фотки
+{% endblock title %}
+
+{% block content %}
+   <h1>фотки</h1>
+   <hr>
+   {% if imgs %}
+       <table class="table-bordered" width="100%">
+           <tr>
+               <th>id</th>
+               <th>фото</th>
+           </tr>
+           {% for img in imgs %}
+           <tr align="left" >
+               <td width="20%">{{ img.id }}</td>
+               <td width="5%">{{ img.photo_url }}</td>
+           </tr>
+           {% endfor %}
+
+       </table>
+
+   {% else %}
+       <h2>Фоток нет!</h2>
+   {% endif %}
+
+{% endblock content %}

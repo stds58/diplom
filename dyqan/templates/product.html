@@ -1,0 +1,41 @@
+
+{% extends 'flatpages/default.html' %}
+{% block title %}
+товар
+{% endblock title %}
+
+{% block content %}
+   <h1>товар №{{ product.id }}</h1>
+   <hr>
+
+   {% if product %}
+<table class="table-bordered" width="100%">
+    <tr align="left"><td>Товар</td><td>{{ product.product_name }}</td></tr>
+    <tr align="left"><td>Марка</td><td>{{ product.marka }}</td></tr>
+    <tr align="left"><td>Цена</td><td>{{ product.price }}</td></tr>
+    <tr align="left"><td>Количество</td><td>{{ product.quantity }}</td></tr>
+    <tr align="left"><td>Страна</td><td>{{ product.country }}</td></tr>
+    <tr align="left"><td>Категория</td><td>{{ product.category }}</td></tr>
+    <tr align="left"><td>Фото</td><td>{% for image in product.image.all %} {{ image }} {% endfor %}</td></tr>
+    <tr align="left"><td>Корзина</td><td>
+      <form action="{% url 'add_in_basket' product.pk %}" method="POST">
+        {% csrf_token %}
+            <button type="submit" name="product_id" value="{{product.id}}">Добавить</button>
+      </form>
+    </td></tr>
+    <tr align="left"><td>Корзина</td><td>
+      <form action="{% url 'delete_from_basket' product.pk %}" method="POST">
+        {% csrf_token %}
+            <button type="submit" name="product_id" value="{{product.id}}">Удалить</button>
+      </form>
+    </td></tr>
+</table>
+
+<a href="/products/">назад к товарам</a>
+
+   {% else %}
+       <h2>Такого товара нет!</h2>
+   {% endif %}
+
+
+{% endblock content %}

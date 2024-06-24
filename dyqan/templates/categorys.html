@@ -1,0 +1,48 @@
+
+{% extends 'flatpages/default.html' %}
+{% block title %}
+категории
+{% endblock title %}
+
+{% block content %}
+   <h1>категории</h1>
+   <hr>
+
+   {% if categorys %}
+           <table class="table-bordered" width="100%">
+           <tr align="left">
+               <th>Категория</th>
+               <th>Посмотреть категорию</th>
+           </tr>
+
+           {% for category in categorys %}
+            <tr align="left">
+               <td width="10%">{{ category.category_name }}</td>
+               <td width="10%"><a href="/categorys/{{category.id}}/">прочитать</a></td>
+            </tr>
+           {% endfor %}
+           </table>
+   {% else %}
+       <h2>Категорий нет!</h2>
+   {% endif %}
+
+
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+   {{ page_obj.number }}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+<p><a href="/categorys/create/">добавить категорию</a></p>
+
+{% endblock content %}

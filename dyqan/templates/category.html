@@ -1,0 +1,25 @@
+
+{% extends 'flatpages/default.html' %}
+{% block title %}
+категория
+{% endblock title %}
+
+{% block content %}
+   <h1>категория №{{ category.id }}</h1>
+   <hr>
+
+   {% if category %}
+<table class="table-bordered" width="100%">
+    <tr align="left"><td>Категория</td><td>{{ category.category_name }}</td></tr>
+    <tr align="left"><td>Изменить</td><td><a href="/categorys/{{ category.id }}/edit/">Изменить</a></td></tr>
+    <tr align="left"><td>Удалить</td><td><a href="/categorys/{{ category.id }}/delete/">Удалить</a></td></tr>
+</table>
+
+<a href="/categorys/">назад к категориям</a>
+
+   {% else %}
+       <h2>Такой категории нет!</h2>
+   {% endif %}
+
+
+{% endblock content %}

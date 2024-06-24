@@ -1,0 +1,34 @@
+{% extends 'flatpages/default.html' %}
+{% block title %}
+заказы
+{% endblock title %}
+
+{% block content %}
+   <h1>заказы</h1>
+   <hr>
+   {% if order %}
+           <table class="table-bordered" width="100%">
+           <tr align="left">
+               <th>Покупатель</th>
+               <th>Оплачено</th>
+               <th>Дата оплаты</th>
+               <th>Дата создания заказа</th>
+               <th>Товары</th>
+           </tr>
+
+           {% for product in order.product.all %}
+            <tr align="left">
+               <td width="10%">{{ order.account }}</td>
+               <td width="10%">{{ order.is_paid }}</td>
+               <td width="10%">{{ order.date_paid|date:'d.m.Y H:i' }}</td>
+               <td width="10%">{{ order.date_create|date:'d.m.Y H:i' }}</td>
+               <td width="10%">{{ product }}</td>
+            </tr>
+           {% endfor %}
+           </table>
+   {% else %}
+       <h2>Заказов нет!</h2>
+   {% endif %}
+
+<a href="/orders/">к заказам</a>
+{% endblock content %}
