@@ -173,5 +173,4 @@ MANAGERS = [("n1", "stds58@gmail.com")]
 ADMINS = [("n2", "stds58@yandex.ru")]
 SERVER_EMAIL = 'stds58@yandex.ru'
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
 

@@ -23,14 +23,14 @@
 
            {% for product in products %}
             <tr align="left">
-               <td width="10%">{{ product.product_name }}</td>
+               <td width="30%">{{ product.product_name }}</td>
                <td width="10%">{{ product.marka }}</td>
-               <td width="10%">{{ product.price }}</td>
-               <td width="10%">{{ product.quantity }}</td>
+               <td width="5%">{{ product.price }}</td>
+               <td width="5%">{{ product.quantity }}</td>
                <td width="10%">{{ product.country }}</td>
                <td width="10%">{{ product.category }}</td>
                <td width="10%">{% for image in product.image.all %} {{ image }} {% endfor %}</td>
-               <td width="10%"><a href="/products/{{product.id}}/">прочитать</a></td>
+               <td width="5%"><a href="/products/{{product.id}}/">прочитать</a></td>
             </tr>
            {% endfor %}
            </table>

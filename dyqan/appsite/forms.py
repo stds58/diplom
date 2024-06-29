@@ -1,6 +1,5 @@
 from django import forms
 from .models import Account, Country, Category, Image, Product, Order, OrderProduct, ImageProduct
-from django.core.exceptions import ValidationError
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -54,7 +53,6 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = [
-            #'account',
             'product',
         ]
 

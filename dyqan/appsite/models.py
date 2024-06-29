@@ -39,7 +39,12 @@ class Image(models.Model):
 
     @property
     def photo_url(self):
-        return format_html('<img src="{}" width="100" height="100" alt="">'.format(self.img.url))
+        return format_html('<img src="{}" width="300" height="300" alt="">'.format(self.img.url))
+
+    @property
+    def photo_url_carusel(self):
+        return format_html('src="{}" width="300" height="300" '.format(self.img.url))
+
 
     def __str__(self):
         return format_html('<img src="{}" width="100" height="100" alt="">'.format(self.img.url))

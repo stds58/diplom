@@ -1,4 +1,4 @@
-from django.shortcuts import render
+
 from .models import Account, Country, Category, Image, Product, Order, OrderProduct, ImageProduct
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -6,10 +6,6 @@ from .forms import CategoryForm, CountryForm, ProductForm, OrderForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required, permission_required
-from django.utils.decorators import method_decorator
-
 
 
 class ProductList(ListView):
@@ -17,7 +13,7 @@ class ProductList(ListView):
     orderng = 'id'
     template_name = 'products.html'
     context_object_name = 'products'
-    paginate_by = 2
+    paginate_by = 3
 
 
 class ProductDetail(DetailView):
@@ -178,7 +174,7 @@ class CountryList(ListView):
     orderng = 'id'
     template_name = 'countrys.html'
     context_object_name = 'countrys'
-    paginate_by = 2
+    paginate_by = 3
 
 
 class CountryDetail(DetailView):
@@ -214,7 +210,6 @@ class ImageList(ListView):
     model = Image
     template_name = 'imgs.html'
     context_object_name = 'imgs'
-    #paginate_by = 2
 
 
 class OrderProductDetail(DetailView):
