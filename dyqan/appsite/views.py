@@ -6,6 +6,9 @@ from .forms import CategoryForm, CountryForm, ProductForm, OrderForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 
 
 class ProductList(ListView):
@@ -24,12 +27,22 @@ class ProductDetail(DetailView):
 
 def add_in_basket(request, pk):
     account = Account.objects.filter(user__username=request.user).values('id')
+    if not account:
+        user = User.objects.filter(username=request.user).values('id')
+        if not user:
+            return HttpResponseRedirect('/accounts/signup/')
+        else:
+            acc = Account.objects.create(user_id=user)
+            acc.save()
+            account = Account.objects.filter(user__username=request.user).values('id')
     account_id = account.values_list('id')[0][0]
     order = Order.objects.filter(account=account_id).filter(is_paid=False)
     if not order:
         order = Order.objects.create(account_id=account_id)
         order.save()
-    order_id = order.values_list('id')[0][0]
+        order_id = order.id
+    else:
+        order_id = order.values_list('id')[0][0]
     product = OrderProduct.objects.filter(order_id=order_id).filter(product_id=pk)
     if not product:
         product = OrderProduct.objects.create(order_id_id=order_id, product_id_id=pk, quantity=1)
@@ -42,11 +55,18 @@ def add_in_basket(request, pk):
 
 def delete_from_basket(request, pk):
     account = Account.objects.filter(user__username=request.user).values('id')
+    if not account:
+        user = User.objects.filter(username=request.user).values('id')
+        if not user:
+            return HttpResponseRedirect('/accounts/signup/')
+        else:
+            acc = Account.objects.create(user_id=user)
+            acc.save()
+            account = Account.objects.filter(user__username=request.user).values('id')
     account_id = account.values_list('id')[0][0]
     order = Order.objects.filter(account=account_id).filter(is_paid=False)
     if not order:
-        order = Order.objects.create(account_id=account_id)
-        order.save()
+        return HttpResponseRedirect(reverse('product', args=[str(pk)]))
     order_id = order.values_list('id')[0][0]
     product = OrderProduct.objects.filter(order_id=order_id).filter(product_id=pk)
     if product:
@@ -54,6 +74,9 @@ def delete_from_basket(request, pk):
             quantity = product.values_list('quantity')[0][0] - 1
             OrderProduct.objects.filter(order_id=order_id).filter(product_id=pk).update(quantity=quantity)
         else:
+            order_id = product.values_list('order_id')[0][0]
+            order = Order.objects.filter(id=order_id)
+            order.delete()
             product.delete()
     return HttpResponseRedirect(reverse('product', args=[str(pk)]))
 
@@ -216,3 +239,14 @@ class OrderProductDetail(DetailView):
     model = OrderProduct
     template_name = 'orderproduct.html'
     context_object_name = 'orderproduct'
+
+
+def About(request):
+    template_name = render_to_string('flatpages/about.html')
+    return HttpResponse(template_name)
+
+
+def Contact(request):
+    template_name = render_to_string('flatpages/contact.html')
+    return HttpResponse(template_name)
+
