@@ -19,10 +19,34 @@ class ProductList(ListView):
     paginate_by = 3
 
 
+class ProductListAdmin(PermissionRequiredMixin, LoginRequiredMixin, ListView):
+    permission_required = ('appsite.view_productsadmin')
+    model = Product
+    orderng = 'id'
+    template_name = 'productsadmin.html'
+    context_object_name = 'productsadmin'
+    paginate_by = 3
+
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
+
+
 class ProductDetail(DetailView):
     model = Product
     template_name = 'product.html'
     context_object_name = 'product'
+
+
+class ProductDetailAdmin(PermissionRequiredMixin, LoginRequiredMixin, DetailView):
+    permission_required = ('appsite.view_product')
+    model = Product
+    template_name = 'productadmin.html'
+    context_object_name = 'productadmin'
+
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
 
 def add_in_basket(request, pk):
@@ -100,12 +124,20 @@ class ProductCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
                 post_img_obj.save()
         return super().form_valid(form)
 
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
+
 
 class ProductUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     permission_required = ('appsite.change_product')
     form_class = ProductForm
     model = Product
-    template_name = 'producty_edit.html'
+    template_name = 'product_edit.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
 
 class ProductDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
@@ -113,6 +145,10 @@ class ProductDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Product
     template_name = 'product_delete.html'
     success_url = reverse_lazy('products')
+
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
 
 class OrderList(ListView):
@@ -156,18 +192,28 @@ class OrderDelete(DeleteView):
     success_url = reverse_lazy('orders')
 
 
-class CategoryList(ListView):
+class CategoryList(PermissionRequiredMixin, LoginRequiredMixin, ListView):
+    permission_required = ('appsite.view_category')
     model = Category
     orderng = 'id'
     template_name = 'categorys.html'
     context_object_name = 'categorys'
     paginate_by = 2
 
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
-class CategoryDetail(DetailView):
+
+class CategoryDetail(PermissionRequiredMixin, LoginRequiredMixin, DetailView):
+    permission_required = ('appsite.view_category')
     model = Category
     template_name = 'category.html'
     context_object_name = 'category'
+
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
 
 class CategoryCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
@@ -177,12 +223,20 @@ class CategoryCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     template_name = 'category_edit.html'
     success_url = ''
 
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
+
 
 class CategoryUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     permission_required = ('appsite.change_category')
     form_class = CategoryForm
     model = Category
     template_name = 'category_edit.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
 
 class CategoryDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
@@ -191,19 +245,33 @@ class CategoryDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     template_name = 'category_delete.html'
     success_url = reverse_lazy('categorys')
 
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
-class CountryList(ListView):
+
+class CountryList(PermissionRequiredMixin, LoginRequiredMixin, ListView):
+    permission_required = ('appsite.view_country')
     model = Country
     orderng = 'id'
     template_name = 'countrys.html'
     context_object_name = 'countrys'
     paginate_by = 3
 
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
-class CountryDetail(DetailView):
+
+class CountryDetail(PermissionRequiredMixin, LoginRequiredMixin, DetailView):
+    permission_required = ('appsite.view_country')
     model = Country
     template_name = 'country.html'
     context_object_name = 'country'
+
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
 
 class CountryCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
@@ -213,12 +281,20 @@ class CountryCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     template_name = 'country_edit.html'
     success_url = ''
 
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
+
 
 class CountryUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     permission_required = ('appsite.change_country')
     form_class = CountryForm
     model = Country
     template_name = 'country_edit.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
 
 
@@ -228,11 +304,20 @@ class CountryDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     template_name = 'country_delete.html'
     success_url = reverse_lazy('countrys')
 
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
-class ImageList(ListView):
+
+class ImageList(PermissionRequiredMixin, LoginRequiredMixin, ListView):
+    permission_required = ('appsite.view_image')
     model = Image
     template_name = 'imgs.html'
     context_object_name = 'imgs'
+
+    def dispatch(self, request, *args, **kwargs):
+        template_name = render_to_string('flatpages/error.html')
+        return HttpResponse(template_name)
 
 
 class OrderProductDetail(DetailView):

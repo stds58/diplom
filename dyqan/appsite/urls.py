@@ -3,13 +3,16 @@ from .views import (ProductList, ProductDetail, ProductCreate, ProductUpdate, Pr
    OrderList, OrderDetail, OrderCreate, OrderUpdate, OrderDelete, \
    CategoryList, CategoryDetail, CategoryCreate, CategoryUpdate, CategoryDelete, \
    CountryList, CountryDetail, CountryCreate, CountryUpdate, CountryDelete, \
-   ImageList, add_in_basket, delete_from_basket, OrderProductDetail)
+   ImageList, add_in_basket, delete_from_basket, OrderProductDetail,
+                    ProductListAdmin, ProductDetailAdmin)
 
 
 urlpatterns = [
 
    path('products/', ProductList.as_view(), name= 'products'),
+   path('productsadmin/', ProductListAdmin.as_view(), name= 'productsadmin'),
    path('products/<int:pk>/', ProductDetail.as_view(), name= 'product'),
+   path('productsadmin/<int:pk>/', ProductDetailAdmin.as_view(), name= 'productadmin'),
    path('products/create/', ProductCreate.as_view(), name='product_create'),
    path('products/<int:pk>/edit/', ProductUpdate.as_view(), name='product_update'),
    path('products/<int:pk>/delete/', ProductDelete.as_view(), name='product_delete'),

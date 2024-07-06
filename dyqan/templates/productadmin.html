@@ -1,0 +1,31 @@
+
+{% extends 'flatpages/default.html' %}
+{% block title %}
+товар
+{% endblock title %}
+
+{% block content %}
+   <h1>товар №{{ productadmin.id }}</h1>
+   <hr>
+   {% if productadmin %}
+<table class="table-bordered" width="100%">
+    <tr align="left"><td>Товар</td><td>{{ productadmin.product_name }}</td></tr>
+    <tr align="left"><td>Марка</td><td>{{ productadmin.marka }}</td></tr>
+    <tr align="left"><td>Цена</td><td>{{ productadmin.price }}</td></tr>
+    <tr align="left"><td>Количество</td><td>{{ productadmin.quantity }}</td></tr>
+    <tr align="left"><td>Страна</td><td>{{ productadmin.country }}</td></tr>
+    <tr align="left"><td>Категория</td><td>{{ productadmin.category }}</td></tr>
+    <tr align="left"><td>Фото</td><td>{% for image in productadmin.image.all %} {{ image }} {% endfor %}</td></tr>
+    <tr align="left"><td>Изменить</td><td><a href="/products/{{ productadmin.id }}/edit/">Изменить</a></td></tr>
+    <tr align="left"><td>Удалить</td><td><a href="/products/{{ productadmin.id }}/delete/">Удалить</a></td></tr>
+
+</table>
+
+<a href="/productsadmin/">назад к товарам</a>
+
+   {% else %}
+       <h2>Такого товара нет!</h2>
+   {% endif %}
+
+
+{% endblock content %}
