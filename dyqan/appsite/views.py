@@ -6,9 +6,10 @@ from .forms import CategoryForm, CountryForm, ProductForm, OrderForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 
 class ProductList(ListView):
@@ -20,7 +21,7 @@ class ProductList(ListView):
 
 
 class ProductListAdmin(PermissionRequiredMixin, LoginRequiredMixin, ListView):
-    permission_required = ('appsite.view_productsadmin')
+    permission_required = ('appsite.view_product')
     model = Product
     orderng = 'id'
     template_name = 'productsadmin.html'
@@ -29,7 +30,21 @@ class ProductListAdmin(PermissionRequiredMixin, LoginRequiredMixin, ListView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(ProductListAdmin, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class ProductDetail(DetailView):
@@ -46,7 +61,21 @@ class ProductDetailAdmin(PermissionRequiredMixin, LoginRequiredMixin, DetailView
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(ProductDetailAdmin, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 def add_in_basket(request, pk):
@@ -126,7 +155,21 @@ class ProductCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(ProductCreate, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class ProductUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
@@ -137,7 +180,21 @@ class ProductUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(ProductUpdate, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class ProductDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
@@ -148,7 +205,21 @@ class ProductDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(ProductDelete, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class OrderList(ListView):
@@ -201,8 +272,21 @@ class CategoryList(PermissionRequiredMixin, LoginRequiredMixin, ListView):
     paginate_by = 2
 
     def dispatch(self, request, *args, **kwargs):
-        template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse( render_to_string('flatpages/error.html') )
+        user_groups = user.groups.values('id','user','name')
+        if not user_groups:
+            return HttpResponse( render_to_string('flatpages/error.html') )
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(CategoryList, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse( render_to_string('flatpages/error.html') )
 
 
 class CategoryDetail(PermissionRequiredMixin, LoginRequiredMixin, DetailView):
@@ -213,7 +297,21 @@ class CategoryDetail(PermissionRequiredMixin, LoginRequiredMixin, DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(CategoryDetail, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class CategoryCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
@@ -225,7 +323,21 @@ class CategoryCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(CategoryCreate, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class CategoryUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
@@ -236,7 +348,21 @@ class CategoryUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(CategoryUpdate, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class CategoryDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
@@ -247,7 +373,21 @@ class CategoryDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(CategoryDelete, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class CountryList(PermissionRequiredMixin, LoginRequiredMixin, ListView):
@@ -260,7 +400,21 @@ class CountryList(PermissionRequiredMixin, LoginRequiredMixin, ListView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(CountryList, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class CountryDetail(PermissionRequiredMixin, LoginRequiredMixin, DetailView):
@@ -271,7 +425,21 @@ class CountryDetail(PermissionRequiredMixin, LoginRequiredMixin, DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(CountryDetail, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class CountryCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
@@ -283,7 +451,21 @@ class CountryCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(CountryCreate, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class CountryUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
@@ -294,7 +476,21 @@ class CountryUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(CountryUpdate, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 
@@ -306,7 +502,21 @@ class CountryDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(CountryDelete, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class ImageList(PermissionRequiredMixin, LoginRequiredMixin, ListView):
@@ -317,7 +527,21 @@ class ImageList(PermissionRequiredMixin, LoginRequiredMixin, ListView):
 
     def dispatch(self, request, *args, **kwargs):
         template_name = render_to_string('flatpages/error.html')
-        return HttpResponse(template_name)
+        username = request.user
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/accounts/signup/')
+        except MultipleObjectsReturned:
+            return HttpResponse(render_to_string('flatpages/error.html'))
+        user_groups = user.groups.values('id', 'user', 'name')
+        if not user_groups:
+            return HttpResponse(template_name)
+        for user_group in user_groups:
+            if user_group['user'] == user.id and user_group['name'] == 'staff':
+                return super(ImageList, self).dispatch(request, *args, **kwargs)
+            else:
+                return HttpResponse(template_name)
 
 
 class OrderProductDetail(DetailView):
