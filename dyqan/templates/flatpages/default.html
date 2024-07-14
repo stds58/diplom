@@ -152,7 +152,18 @@ img {vertical-align: middle;}
             </ul>
             <ul class="navbar-nav mb-lg-0" style="margin-right: 5rem">
               <li class="nav-item dropdown">
-                <a class="btn btn-outline-success" role="button" data-bs-toggle="dropdown" aria-expanded="false">Вход</a>
+                <a class="btn btn-outline-success" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if request.user.is_authenticated %}
+                        вы вошли как {{ request.user }}
+                        {% for user_group in user.groups.all %}
+                            {% if user_group.name == 'staff' %}
+                            администратор
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                     Вход
+                    {% endif %}
+                </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="/accounts/signup/">Регистрация</a></li>
                   <li><a class="dropdown-item" href="/accounts/login/">Войти</a></li>

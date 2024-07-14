@@ -229,11 +229,22 @@ class OrderList(ListView):
     context_object_name = 'orders'
     paginate_by = 2
 
+    def get_queryset(self):
+        account = Account.objects.get(user_id=self.request.user.id)
+        qyeryset = Order.objects.filter(account_id=account.id)
+        return qyeryset
+
 
 class OrderDetail(DetailView):
     model = Order
     template_name = 'order.html'
     context_object_name = 'order'
+
+    def get_queryset(self):
+        account = Account.objects.get(user_id=self.request.user.id)
+        qyeryset = Order.objects.filter(account_id=account.id)
+        return qyeryset
+
 
 
 class OrderCreate(CreateView):
